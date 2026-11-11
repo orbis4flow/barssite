@@ -22,6 +22,7 @@
     if (filter.type === 'all') return true;
     if (filter.type === 'digits') return c.type === 'matches' || c.type === 'differs';
     if (filter.type === 'evenodd') return c.type === 'even_odd';
+    if (filter.type === 'rise' || filter.type === 'fall') return c.type === filter.type;
     return c.type === 'over' || c.type === 'under';
   }
 
@@ -172,7 +173,7 @@
   function renderFilters() {
     if (view === 'open') { el.filters.innerHTML = ''; return; }
     var ranges = [['today', 'Today'], ['7d', '7 days'], ['30d', '30 days'], ['all', 'All']];
-    var types = [['all', 'All types'], ['evenodd', 'Even / Odd'], ['digits', 'Matches / Differs'], ['overunder', 'Over / Under']];
+    var types = [['all', 'All types'], ['rise', 'Buy'], ['fall', 'Sell']];
 
     /* Two groups, not five loose controls: the period chips, then the
        controls that act on what they select. Left to right, they read as

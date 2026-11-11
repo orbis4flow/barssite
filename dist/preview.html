@@ -5446,6 +5446,19 @@ html body #aiPage .es-state{display:inline-flex!important;flex-direction:row!imp
 .panel > .skx-panel{border:0;margin:0;background:transparent}
 .panel > .skx-panel .skx-seg{border:1px solid var(--line);margin:14px 14px 0}
 
+/* ---------------- a bigger chart ----------------
+   The chart is what people came to look at, so it gets more of the
+   screen: about half a phone's height, and two thirds of a laptop's. */
+@media (max-width:899px){
+  html body .terminal .chart-pin #chart{flex:none;height:clamp(260px, 50dvh, 400px);min-height:0}
+}
+@media (min-width:900px){
+  .terminal .chart-pin #chart{min-height:min(66vh,600px)}
+}
+
+/* Vexa has no contract tabs or digit row: nothing empty above or below the chart */
+#contractTabs[hidden],#digits[hidden]{display:none!important}
+
 </style>
 
 <div class="app" id="app"></div>
@@ -5474,8 +5487,8 @@ window.NEXAS_CONFIG = {
   /* Supabase project. The publishable key is bound by row level
      security and is safe to ship in a browser. The service-role key
      must never appear in a file like this. */
-  supabaseUrl: '' /* TODO: the new Supabase project URL */,
-  supabaseKey: '' /* TODO: its publishable key */,
+  supabaseUrl: 'https://fsokiaswtlmdsqrpoqxt.supabase.co',
+  supabaseKey: 'sb_publishable_xY2PH-pIxuh-WDClk7i4iw_pJkFW8nW',
 
   /* The USDT deposit wallet. Public by nature — it is what people send
      money to — and here as a fallback so the deposit sheet works before
@@ -6858,7 +6871,10 @@ window.NEX_CHART = { type: 'candle', agg: 5, count: 300 };
     matches: 10.35,
     differs: 1.084,
     over: 1.72,
-    under: 1.72
+    under: 1.72,
+    /* Buy / Sell on the bars: did the price end higher or lower than it started */
+    rise: 1.95,
+    fall: 1.95
   };
   var WITHDRAW_UNLOCK_USD = 20;
   var LIMITS = { min: 1, max: 5000, maxTicks: 10, minTicks: 1 };
@@ -7393,6 +7409,8 @@ window.NEX_CHART = { type: 'candle', agg: 5, count: 300 };
     if (c.type === 'differs') return 'Differs ' + c.barrier;
     if (c.type === 'over') return 'Over ' + c.barrier;
     if (c.type === 'under') return 'Under ' + c.barrier;
+    if (c.type === 'rise') return 'Buy';
+    if (c.type === 'fall') return 'Sell';
     return c.type;
   }
 
@@ -7489,6 +7507,9 @@ window.NEX_CHART = { type: 'candle', agg: 5, count: 300 };
       case 'differs': return digit !== c.barrier;
       case 'over': return digit > c.barrier;
       case 'under': return digit < c.barrier;
+      /* lastSpot is the tick being read; a flat finish is a loss both ways */
+      case 'rise': return c.lastSpot > c.entrySpot;
+      case 'fall': return c.lastSpot < c.entrySpot;
     }
     return false;
   }
@@ -9670,9 +9691,11 @@ window.NEX_CHART = { type: 'candle', agg: 5, count: 300 };
 
   var S = {
     symbol: 'R_10',
-    tab: 'even_odd',           /* even_odd | matches | over_under */
+    /* Vexa trades the bars: Buy if the price ends higher, Sell if it
+       ends lower. The digit contracts belong to the other two sites. */
+    tab: 'rise_fall',
     fromScan: null,            /* the scanner's ticket, while it is shown */
-    side: 'even',
+    side: 'rise',
     barrier: 5,
     stake: 10,               /* USD; replaced at init with a round local figure */
     /* Not a setting. See ticksFor(): a contract runs five seconds, and
@@ -9692,6 +9715,7 @@ window.NEX_CHART = { type: 'candle', agg: 5, count: 300 };
   function html(node, markup) { if (node) node.innerHTML = markup; }
 
   function typeFor(side) {
+    if (S.tab === 'rise_fall') return side;
     if (S.tab === 'even_odd') return 'even_odd';
     if (S.tab === 'matches') return side === 'matches' ? 'matches' : 'differs';
     return side === 'over' ? 'over' : 'under';
@@ -9745,6 +9769,8 @@ window.NEX_CHART = { type: 'candle', agg: 5, count: 300 };
     refreshPicker();
     var h = API.feed.history(S.symbol).slice(-120);
     renderInstLive(h, meta);
+    /* No digit circles on the bars: the price is the whole story. */
+    if (S.tab === 'rise_fall') { html(el.digits, ''); if (el.digits) el.digits.hidden = true; return; }
     var counts = [0,0,0,0,0,0,0,0,0,0];
     h.forEach(function (p) {
       var dg = p.digit == null ? lastDigitOf(p.price, meta.digits) : p.digit;
@@ -9861,6 +9887,7 @@ window.NEX_CHART = { type: 'candle', agg: 5, count: 300 };
 
   /* ---------- contract tabs ---------- */
   function renderTabs() {
+    if (S.tab === 'rise_fall') { html(el.tabs, ''); if (el.tabs) el.tabs.hidden = true; return; }
     /* An icon each, so the three are told apart at a glance rather than
        by reading three similar pairs of words. The glyph says what the
        contract asks: a split for parity, a bullseye for hitting one
@@ -9971,6 +9998,7 @@ window.NEX_CHART = { type: 'candle', agg: 5, count: 300 };
     '</div>';
   }
   function tabLabel() {
+    if (S.tab === 'rise_fall') return 'Buy / Sell';
     return S.tab === 'even_odd' ? 'Even / Odd'
       : S.tab === 'matches' ? 'Matches / Differs' : 'Over / Under';
   }
@@ -9986,7 +10014,7 @@ window.NEX_CHART = { type: 'candle', agg: 5, count: 300 };
     /* A number line, not a stepper. Picking 7 was six presses of a
        chevron, and the digit is not a quantity to nudge up and down: it
        is one of ten choices, all of which fit on one row. */
-    var barrierRow = S.tab === 'even_odd' ? '' :
+    var barrierRow = (S.tab === 'even_odd' || S.tab === 'rise_fall') ? '' :
       '<div class="barrier">' +
         '<span class="label">' + (S.tab === 'matches' ? 'Digit to match' : 'Barrier digit') + '</span>' +
         '<div class="numline">' +
@@ -10077,6 +10105,7 @@ window.NEX_CHART = { type: 'candle', agg: 5, count: 300 };
      the whole progress display, so nothing has to appear elsewhere on
      the page and push the layout around. */
   function sidesFor() {
+    if (S.tab === 'rise_fall') return [['rise', 'Buy'], ['fall', 'Sell']];
     return S.tab === 'even_odd' ? [['even', 'Even'], ['odd', 'Odd']]
       : S.tab === 'matches' ? [['matches', 'Matches ' + S.barrier], ['differs', 'Differs ' + S.barrier]]
       : [['over', 'Over ' + S.barrier], ['under', 'Under ' + S.barrier]];
@@ -10307,7 +10336,7 @@ window.NEX_CHART = { type: 'candle', agg: 5, count: 300 };
     if (API.account.kind() === 'real' && window.NexNeedAccount && window.NexNeedAccount()) return null;
     var res = API.contracts.buy({
       symbol: S.symbol, type: typeFor(side), side: side,
-      barrier: S.tab === 'even_odd' ? null : S.barrier,
+      barrier: (S.tab === 'even_odd' || S.tab === 'rise_fall') ? null : S.barrier,
       stake: runningStake(), ticks: runId ? RUN_TICKS : CONTRACT_TICKS, run: runId || null
     });
     if (!res.ok) {
@@ -10747,8 +10776,7 @@ window.NEX_CHART = { type: 'candle', agg: 5, count: 300 };
     var ticket = API.prefs.takeTicket();
     if (ticket) {
       S.symbol = ticket.symbol || S.symbol;
-      S.tab = ticket.tab || S.tab;
-      if (ticket.barrier != null) S.barrier = ticket.barrier;
+      /* The market carries over; the digit contract does not, Vexa only trades Buy / Sell. */
       /* A duration on the ticket is ignored: every contract here runs
          five seconds, and the scanner ranks contracts, not durations. */
       /* No stake rides along any more: the scanner found a contract, not
@@ -10818,6 +10846,7 @@ window.NEX_CHART = { type: 'candle', agg: 5, count: 300 };
     if (filter.type === 'all') return true;
     if (filter.type === 'digits') return c.type === 'matches' || c.type === 'differs';
     if (filter.type === 'evenodd') return c.type === 'even_odd';
+    if (filter.type === 'rise' || filter.type === 'fall') return c.type === filter.type;
     return c.type === 'over' || c.type === 'under';
   }
 
@@ -10968,7 +10997,7 @@ window.NEX_CHART = { type: 'candle', agg: 5, count: 300 };
   function renderFilters() {
     if (view === 'open') { el.filters.innerHTML = ''; return; }
     var ranges = [['today', 'Today'], ['7d', '7 days'], ['30d', '30 days'], ['all', 'All']];
-    var types = [['all', 'All types'], ['evenodd', 'Even / Odd'], ['digits', 'Matches / Differs'], ['overunder', 'Over / Under']];
+    var types = [['all', 'All types'], ['rise', 'Buy'], ['fall', 'Sell']];
 
     /* Two groups, not five loose controls: the period chips, then the
        controls that act on what they select. Left to right, they read as

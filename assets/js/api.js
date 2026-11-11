@@ -127,7 +127,10 @@
     matches: 10.35,
     differs: 1.084,
     over: 1.72,
-    under: 1.72
+    under: 1.72,
+    /* Buy / Sell on the bars: did the price end higher or lower than it started */
+    rise: 1.95,
+    fall: 1.95
   };
   var WITHDRAW_UNLOCK_USD = 20;
   var LIMITS = { min: 1, max: 5000, maxTicks: 10, minTicks: 1 };
@@ -662,6 +665,8 @@
     if (c.type === 'differs') return 'Differs ' + c.barrier;
     if (c.type === 'over') return 'Over ' + c.barrier;
     if (c.type === 'under') return 'Under ' + c.barrier;
+    if (c.type === 'rise') return 'Buy';
+    if (c.type === 'fall') return 'Sell';
     return c.type;
   }
 
@@ -758,6 +763,9 @@
       case 'differs': return digit !== c.barrier;
       case 'over': return digit > c.barrier;
       case 'under': return digit < c.barrier;
+      /* lastSpot is the tick being read; a flat finish is a loss both ways */
+      case 'rise': return c.lastSpot > c.entrySpot;
+      case 'fall': return c.lastSpot < c.entrySpot;
     }
     return false;
   }

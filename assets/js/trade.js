@@ -15,9 +15,11 @@
 
   var S = {
     symbol: 'R_10',
-    tab: 'even_odd',           /* even_odd | matches | over_under */
+    /* Vexa trades the bars: Buy if the price ends higher, Sell if it
+       ends lower. The digit contracts belong to the other two sites. */
+    tab: 'rise_fall',
     fromScan: null,            /* the scanner's ticket, while it is shown */
-    side: 'even',
+    side: 'rise',
     barrier: 5,
     stake: 10,               /* USD; replaced at init with a round local figure */
     /* Not a setting. See ticksFor(): a contract runs five seconds, and
@@ -37,6 +39,7 @@
   function html(node, markup) { if (node) node.innerHTML = markup; }
 
   function typeFor(side) {
+    if (S.tab === 'rise_fall') return side;
     if (S.tab === 'even_odd') return 'even_odd';
     if (S.tab === 'matches') return side === 'matches' ? 'matches' : 'differs';
     return side === 'over' ? 'over' : 'under';
@@ -90,6 +93,8 @@
     refreshPicker();
     var h = API.feed.history(S.symbol).slice(-120);
     renderInstLive(h, meta);
+    /* No digit circles on the bars: the price is the whole story. */
+    if (S.tab === 'rise_fall') { html(el.digits, ''); if (el.digits) el.digits.hidden = true; return; }
     var counts = [0,0,0,0,0,0,0,0,0,0];
     h.forEach(function (p) {
       var dg = p.digit == null ? lastDigitOf(p.price, meta.digits) : p.digit;
@@ -206,6 +211,7 @@
 
   /* ---------- contract tabs ---------- */
   function renderTabs() {
+    if (S.tab === 'rise_fall') { html(el.tabs, ''); if (el.tabs) el.tabs.hidden = true; return; }
     /* An icon each, so the three are told apart at a glance rather than
        by reading three similar pairs of words. The glyph says what the
        contract asks: a split for parity, a bullseye for hitting one
@@ -316,6 +322,7 @@
     '</div>';
   }
   function tabLabel() {
+    if (S.tab === 'rise_fall') return 'Buy / Sell';
     return S.tab === 'even_odd' ? 'Even / Odd'
       : S.tab === 'matches' ? 'Matches / Differs' : 'Over / Under';
   }
@@ -331,7 +338,7 @@
     /* A number line, not a stepper. Picking 7 was six presses of a
        chevron, and the digit is not a quantity to nudge up and down: it
        is one of ten choices, all of which fit on one row. */
-    var barrierRow = S.tab === 'even_odd' ? '' :
+    var barrierRow = (S.tab === 'even_odd' || S.tab === 'rise_fall') ? '' :
       '<div class="barrier">' +
         '<span class="label">' + (S.tab === 'matches' ? 'Digit to match' : 'Barrier digit') + '</span>' +
         '<div class="numline">' +
@@ -422,6 +429,7 @@
      the whole progress display, so nothing has to appear elsewhere on
      the page and push the layout around. */
   function sidesFor() {
+    if (S.tab === 'rise_fall') return [['rise', 'Buy'], ['fall', 'Sell']];
     return S.tab === 'even_odd' ? [['even', 'Even'], ['odd', 'Odd']]
       : S.tab === 'matches' ? [['matches', 'Matches ' + S.barrier], ['differs', 'Differs ' + S.barrier]]
       : [['over', 'Over ' + S.barrier], ['under', 'Under ' + S.barrier]];
@@ -652,7 +660,7 @@
     if (API.account.kind() === 'real' && window.NexNeedAccount && window.NexNeedAccount()) return null;
     var res = API.contracts.buy({
       symbol: S.symbol, type: typeFor(side), side: side,
-      barrier: S.tab === 'even_odd' ? null : S.barrier,
+      barrier: (S.tab === 'even_odd' || S.tab === 'rise_fall') ? null : S.barrier,
       stake: runningStake(), ticks: runId ? RUN_TICKS : CONTRACT_TICKS, run: runId || null
     });
     if (!res.ok) {
@@ -1092,8 +1100,7 @@
     var ticket = API.prefs.takeTicket();
     if (ticket) {
       S.symbol = ticket.symbol || S.symbol;
-      S.tab = ticket.tab || S.tab;
-      if (ticket.barrier != null) S.barrier = ticket.barrier;
+      /* The market carries over; the digit contract does not, Vexa only trades Buy / Sell. */
       /* A duration on the ticket is ignored: every contract here runs
          five seconds, and the scanner ranks contracts, not durations. */
       /* No stake rides along any more: the scanner found a contract, not
