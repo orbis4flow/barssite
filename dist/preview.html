@@ -12614,10 +12614,7 @@ window.NEX_CHART = { type: 'candle', agg: 5, count: 160 };
             item('Update password', { icon: 'lock', modal: 'password' }),
             item('Verify identity', { icon: 'shield', modal: 'verify' })
           ]) +
-          group('Trading tools', [
-            item('Copy trading', { icon: 'copy', href: 'copy' }),
-            item('Responsible trading', { icon: 'book', href: 'responsible' })
-          ]) +
+          /* Trading tools (Copy trading, Responsible trading) hidden from the menu */
           group('Support', [
             item('Live chat', { icon: 'headset', href: 'chat' })
           ]) +
