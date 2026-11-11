@@ -13,7 +13,7 @@
    a claim anyone should rely on.
    ============================================================ */
 window.NEXAS_CONFIG = {
-  /* The same API as Novi: VexaBinary is a second front end on one
+  /* The same API as Novi: VeraBinary is a second front end on one
      backend, so accounts, balances and payments are shared. */
   apiBase: 'https://sitesbackend.onrender.com',
 
@@ -41,7 +41,7 @@ window.NEXAS_CONFIG = {
 window.NEXAS_API = window.NEXAS_API || window.NEXAS_CONFIG.apiBase;
 
 /* The brand, for the shell: the rail's mark and the Trade glyph. */
-window.NEX_BRAND = 'VexaBinary';
+window.NEX_BRAND = 'VeraBinary';
 window.NEX_MARK = 'vb';
 window.NEX_TRADE_ICON = 'candles';
 /* Bars, not a line: candles of five ticks, sixty on screen. */

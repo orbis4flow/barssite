@@ -1,5 +1,5 @@
 /* ============================================================
-   VexaBinary, shell
+   VeraBinary, shell
    Injects the chrome (top bar, drawer, tab bar), owns the modal
    engine, theme, session guard, connection banner and consent
    surfaces. Page-specific logic lives in trade.js / positions.js.
@@ -626,8 +626,8 @@
      aria-label carries the whole name: a screen reader reading "NEXAS
      BINARY" off three separate elements is not the name of anything. */
   function wordmark(to) {
-    return '<a class="wordmark" href="' + to + '" aria-label="VexaBinary">' +
-      '<span class="wm-name" aria-hidden="true"><b>vexa</b><i>binary</i></span>' +
+    return '<a class="wordmark" href="' + to + '" aria-label="VeraBinary">' +
+      '<span class="wm-name" aria-hidden="true"><b>vera</b><i>binary</i></span>' +
     '</a>';
   }
   window.NexWordmark = wordmark;
@@ -983,8 +983,8 @@
   function shareLink(url) {
     if (navigator.share) {
       navigator.share({
-        title: 'VexaBinary',
-        text: 'I trade synthetic indices on VexaBinary. Join with my link.',
+        title: 'VeraBinary',
+        text: 'I trade synthetic indices on VeraBinary. Join with my link.',
         url: url
       }).catch(function () {});
       return;
@@ -1171,7 +1171,7 @@
     var v = document.createElement('div');
     v.className = 'boot';
     v.id = 'bootVeil';
-    v.innerHTML = '<div class="boot-word">VexaBinary</div>' + loader() +
+    v.innerHTML = '<div class="boot-word">VeraBinary</div>' + loader() +
       '<span>Connecting to the feed</span>';
     document.body.appendChild(v);
   }
@@ -1334,7 +1334,7 @@
     el.className = 'splash';
     el.innerHTML = '<div class="splash-inner">' +
       '<div class="pulse"><i></i><i></i><i></i></div>' +
-      '<div class="splash-word">VexaBinary</div>' +
+      '<div class="splash-word">VeraBinary</div>' +
       '<div class="splash-msg" role="status">' + message + '</div></div>';
     document.body.appendChild(el);
     requestAnimationFrame(function () { el.classList.add('open'); });
@@ -2788,7 +2788,7 @@
         '</div>' +
         '<p class="ticket-said">' + escapeHtml(t.body) + '</p>' +
         (t.reply
-          ? '<div class="ticket-reply"><b>VexaBinary support</b><p>' + escapeHtml(t.reply) + '</p></div>'
+          ? '<div class="ticket-reply"><b>VeraBinary support</b><p>' + escapeHtml(t.reply) + '</p></div>'
           : '<div class="ticket-wait">We usually come back within 30 minutes.</div>') +
         '<div class="ticket-when">' + when + '</div>' +
       '</div>';

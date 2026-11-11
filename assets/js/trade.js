@@ -1,5 +1,5 @@
 /* ============================================================
-   VexaBinary, terminal
+   VeraBinary, terminal
    Renders the contract panel for the selected trade type, runs
    validation, places and sells contracts, drives the automated
    run loop, and keeps the chart, digits and open positions in
@@ -15,7 +15,7 @@
 
   var S = {
     symbol: 'R_10',
-    /* Vexa trades the bars: Buy if the price ends higher, Sell if it
+    /* Vera trades the bars: Buy if the price ends higher, Sell if it
        ends lower. The digit contracts belong to the other two sites. */
     tab: 'rise_fall',
     fromScan: null,            /* the scanner's ticket, while it is shown */
@@ -1100,7 +1100,7 @@
     var ticket = API.prefs.takeTicket();
     if (ticket) {
       S.symbol = ticket.symbol || S.symbol;
-      /* The market carries over; the digit contract does not, Vexa only trades Buy / Sell. */
+      /* The market carries over; the digit contract does not, Vera only trades Buy / Sell. */
       /* A duration on the ticket is ignored: every contract here runs
          five seconds, and the scanner ranks contracts, not durations. */
       /* No stake rides along any more: the scanner found a contract, not
