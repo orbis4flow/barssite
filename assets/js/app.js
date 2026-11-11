@@ -545,7 +545,7 @@
   var TABS = [
     { id: 'trade', label: 'Trade', file: '/', icon: window.NEX_TRADE_ICON || 'trade' },
     { id: 'markets', label: 'Markets', file: 'markets', icon: 'markets' },
-    { id: 'ai', label: 'AI', file: 'ai', icon: 'ai' },
+    /* No AI tab: the scanner reads last digits, and VeraBinary trades the bars. */
     { id: 'positions', label: 'Positions', file: 'positions', icon: 'receipt' },
     { id: 'account', label: 'Profile', file: 'account', icon: 'profile', needsAccount: true }
   ];

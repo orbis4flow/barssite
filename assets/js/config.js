@@ -45,4 +45,4 @@ window.NEX_BRAND = 'VeraBinary';
 window.NEX_MARK = 'vb';
 window.NEX_TRADE_ICON = 'candles';
 /* Bars, not a line: candles of five ticks, sixty on screen. */
-window.NEX_CHART = { type: 'candle', agg: 5, count: 300 };
+window.NEX_CHART = { type: 'candle', agg: 5, count: 160 };

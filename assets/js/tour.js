@@ -65,22 +65,22 @@
       targets: ['.topbar .btn-primary', '.rail [data-open="deposit"]'],
       icon: 'down',
       title: 'Deposit',
-      body: 'Fund your real account with M-Pesa, card or USDT. Deposits usually land ' +
+      body: 'Fund your real account with M-Pesa or USDT. Deposits usually land ' +
         'within two minutes.'
     },
     {
       targets: ['#chartInst', '#chartPin'],
       icon: 'candles',
       title: 'Pick a market',
-      body: 'Choose a volatility index here. Each one ticks every second or two, and ' +
-        'the last digit of each price is what the contracts are about.'
+      body: 'Choose a volatility index here. Each bar shows how the price moved over a few ' +
+        'ticks; switch between 1t, 5t, 10t and 15t bars above the chart.'
     },
     {
-      targets: ['#contractTabs'],
-      icon: 'parity',
-      title: 'Choose a contract',
-      body: 'Even or Odd, Matches or Differs, Over or Under: each asks a different ' +
-        'question about that last digit, and pays a different amount.'
+      targets: ['#dock'],
+      icon: 'trade',
+      title: 'Buy or Sell',
+      body: 'Buy if you think the price will end higher than where you entered, Sell if ' +
+        'you think it will end lower. Each button shows what it pays.'
     },
     {
       targets: ['#panel', '#modeSeg'],
@@ -88,13 +88,6 @@
       title: 'Set your stake and trade',
       body: 'Manual places a single trade. Auto keeps trading until it reaches your ' +
         'target profit or stop loss. Set the stake, then press a side at the bottom.'
-    },
-    {
-      targets: [navTo('AI')],
-      icon: 'radar',
-      title: 'Let the AI scan',
-      body: 'The AI scanner reads the recent ticks on every volatility index and loads ' +
-        'its best pick into the terminal for you. Nothing is placed until you press a side.'
     },
     {
       targets: ['.rail [data-open="verify"]', '#menuBtn'],

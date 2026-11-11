@@ -186,7 +186,7 @@
 
     /* series */
     if (candles) {
-      var cw = Math.max(2, (w / candles.length) * 0.62);
+      var cw = Math.max(3, (w / candles.length) * 0.72);
       for (i = 0; i < candles.length; i++) {
         var c = candles[i];
         var cx = (i + 0.5) / candles.length * w;
@@ -300,7 +300,7 @@
       var b = e.target.closest('button[data-agg]');
       if (!b) return;
       var n = +b.getAttribute('data-agg');
-      cfg.agg = n; cfg.count = n === 1 ? 120 : Math.min(600, n * 60);
+      cfg.agg = n; cfg.count = n === 1 ? 120 : Math.min(600, n * 32);
       [].forEach.call(row.children, function (x) { x.classList.toggle('active', x === b); });
       var c = window.NexChartLive;
       if (c) { c.agg = cfg.agg; c.count = cfg.count; c.offset = 0; c.dirty = true; }
