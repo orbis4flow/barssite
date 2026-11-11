@@ -1,5 +1,5 @@
 /* ============================================================
-   VeraBinary, shell
+   ZenyTrade, shell
    Injects the chrome (top bar, drawer, tab bar), owns the modal
    engine, theme, session guard, connection banner and consent
    surfaces. Page-specific logic lives in trade.js / positions.js.
@@ -405,7 +405,7 @@
      styles it in the browser's own font on the browser's own white, and
      on a dark trading screen that is a rectangle of somebody else's
      design dropped into the middle of ours. It also cannot carry a
-     second line, which several of these want.
+     second line, which sezenyl of these want.
 
      Same contract as a <select>: a value, an onChange, and the keyboard
      works. The host element is replaced, so the caller passes an empty
@@ -545,7 +545,7 @@
   var TABS = [
     { id: 'trade', label: 'Trade', file: '/', icon: window.NEX_TRADE_ICON || 'trade' },
     { id: 'markets', label: 'Markets', file: 'markets', icon: 'markets' },
-    /* No AI tab: the scanner reads last digits, and VeraBinary trades the bars. */
+    /* No AI tab: the scanner reads last digits, and ZenyTrade trades the bars. */
     { id: 'positions', label: 'Positions', file: 'positions', icon: 'receipt' },
     { id: 'account', label: 'Profile', file: 'account', icon: 'profile', needsAccount: true }
   ];
@@ -626,8 +626,8 @@
      aria-label carries the whole name: a screen reader reading "NEXAS
      BINARY" off three separate elements is not the name of anything. */
   function wordmark(to) {
-    return '<a class="wordmark" href="' + to + '" aria-label="VeraBinary">' +
-      '<span class="wm-name" aria-hidden="true"><b>vera</b><i>binary</i></span>' +
+    return '<a class="wordmark" href="' + to + '" aria-label="ZenyTrade">' +
+      '<span class="wm-name" aria-hidden="true"><b>zeny</b><i>trade</i></span>' +
     '</a>';
   }
   window.NexWordmark = wordmark;
@@ -983,8 +983,8 @@
   function shareLink(url) {
     if (navigator.share) {
       navigator.share({
-        title: 'VeraBinary',
-        text: 'I trade synthetic indices on VeraBinary. Join with my link.',
+        title: 'ZenyTrade',
+        text: 'I trade synthetic indices on ZenyTrade. Join with my link.',
         url: url
       }).catch(function () {});
       return;
@@ -1171,7 +1171,7 @@
     var v = document.createElement('div');
     v.className = 'boot';
     v.id = 'bootVeil';
-    v.innerHTML = '<div class="boot-word">VeraBinary</div>' + loader() +
+    v.innerHTML = '<div class="boot-word">ZenyTrade</div>' + loader() +
       '<span>Connecting to the feed</span>';
     document.body.appendChild(v);
   }
@@ -1334,7 +1334,7 @@
     el.className = 'splash';
     el.innerHTML = '<div class="splash-inner">' +
       '<div class="pulse"><i></i><i></i><i></i></div>' +
-      '<div class="splash-word">VeraBinary</div>' +
+      '<div class="splash-word">ZenyTrade</div>' +
       '<div class="splash-msg" role="status">' + message + '</div></div>';
     document.body.appendChild(el);
     requestAnimationFrame(function () { el.classList.add('open'); });
@@ -2788,7 +2788,7 @@
         '</div>' +
         '<p class="ticket-said">' + escapeHtml(t.body) + '</p>' +
         (t.reply
-          ? '<div class="ticket-reply"><b>VeraBinary support</b><p>' + escapeHtml(t.reply) + '</p></div>'
+          ? '<div class="ticket-reply"><b>ZenyTrade support</b><p>' + escapeHtml(t.reply) + '</p></div>'
           : '<div class="ticket-wait">We usually come back within 30 minutes.</div>') +
         '<div class="ticket-when">' + when + '</div>' +
       '</div>';

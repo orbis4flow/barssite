@@ -1,5 +1,5 @@
 /* ============================================================
-   VeraBinary, terminal
+   ZenyTrade, terminal
    Renders the contract panel for the selected trade type, runs
    validation, places and sells contracts, drives the automated
    run loop, and keeps the chart, digits and open positions in
@@ -15,7 +15,7 @@
 
   var S = {
     symbol: 'R_10',
-    /* Vera trades the bars: Buy if the price ends higher, Sell if it
+    /* Zeny trades the bars: Buy if the price ends higher, Sell if it
        ends lower. The digit contracts belong to the other two sites. */
     tab: 'rise_fall',
     fromScan: null,            /* the scanner's ticket, while it is shown */
@@ -483,7 +483,7 @@
         var tone = i === 0 ? 'even' : 'odd';
 
         if (live || isRun) {
-          /* A run of several shows how far through it is and where it
+          /* A run of sezenyl shows how far through it is and where it
              stands in money, with the bar filling contract by contract.
              A single contract follows the contract itself: how much of it
              is left, and the same seconds drawn along the foot. */
@@ -1100,7 +1100,7 @@
     var ticket = API.prefs.takeTicket();
     if (ticket) {
       S.symbol = ticket.symbol || S.symbol;
-      /* The market carries over; the digit contract does not, Vera only trades Buy / Sell. */
+      /* The market carries over; the digit contract does not, Zeny only trades Buy / Sell. */
       /* A duration on the ticket is ignored: every contract here runs
          five seconds, and the scanner ranks contracts, not durations. */
       /* No stake rides along any more: the scanner found a contract, not

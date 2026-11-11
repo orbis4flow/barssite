@@ -1,6 +1,6 @@
 {
-  "name": "VeraBinary Terminal",
-  "short_name": "VeraBinary",
+  "name": "ZenyTrade Terminal",
+  "short_name": "ZenyTrade",
   "description": "Trade synthetic indices from your phone.",
   "start_url": "index.html",
   "scope": ".",
